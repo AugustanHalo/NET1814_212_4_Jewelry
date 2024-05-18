@@ -22,4 +22,5 @@ public partial class OrderItem
     public virtual SiOrder Order { get; set; }
 
     public virtual SiProduct Product { get; set; }
+
 }
