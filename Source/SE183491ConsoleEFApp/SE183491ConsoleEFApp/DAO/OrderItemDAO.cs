@@ -28,6 +28,24 @@ namespace SE183491ConsoleEFApp.DAO
             }
         }
 
+        public void UpdateOrderItem(OrderItem orderItem)
+        {
+            using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
+            {
+                _context.OrderItems.Update(orderItem);
+                _context.SaveChanges();
+            }
+        }
+
+        public void FindOrderItemById(int id)
+        {
+            using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
+            {
+                var orderItem = _context.OrderItems.Find(id);
+                Console.WriteLine(orderItem.OrderId + " " + orderItem.ProductId + " " + orderItem.Quantity + " " + orderItem.Price);
+            }
+        }
+
         public void DisplayOrderItems()
         {
             using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
