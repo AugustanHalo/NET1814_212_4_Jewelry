@@ -6,7 +6,7 @@ INSERT INTO Category (CategoryID, CategoryName) VALUES
 (4, 'Earrings'),
 (5, 'Other Jewelry');
 
-INSERT INTO OrderItem (OrderItemID, OrderID, ProductID, Quantity, Primce, Subtotal) VALUES
+INSERT INTO OrderItem (OrderItemID, OrderID, ProductID, Quantity, Price, Subtotal) VALUES
 (1, 1001, 101, 2, 500, 1000),
 (2, 1001, 102, 1, 300, 300),
 (3, 1002, 103, 3, 200, 600),
