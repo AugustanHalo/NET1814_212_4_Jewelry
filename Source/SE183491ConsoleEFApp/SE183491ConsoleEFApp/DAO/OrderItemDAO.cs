@@ -1,4 +1,5 @@
 ﻿using SE183491ConsoleEFApp.Models;
+using SE183491OConsoleEFApp.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,15 @@ using System.Threading.Tasks;
 
 namespace SE183491ConsoleEFApp.DAO
 {
-    internal class OrderItemDAO
+    public class OrderItemDAO : BaseDAO<OrderItem>
     {
+        public OrderItemDAO()
+        {
+            
+        }
         public void AddOrderItem(OrderItem orderItem)
         {
-            using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
+            if(orderItem != _context.OrderItems.Find(orderItem.OrderItemId))
             {
                 _context.OrderItems.Add(orderItem);
                 _context.SaveChanges();
@@ -21,7 +26,8 @@ namespace SE183491ConsoleEFApp.DAO
 
         public void RemoveOrderItem(OrderItem orderItem)
         {
-            using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
+            if (orderItem == _context.OrderItems.Find(orderItem.OrderItemId))
+
             {
                 _context.OrderItems.Remove(orderItem);
                 _context.SaveChanges();
@@ -30,7 +36,7 @@ namespace SE183491ConsoleEFApp.DAO
 
         public void UpdateOrderItem(OrderItem orderItem)
         {
-            using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
+            if (orderItem == _context.OrderItems.Find(orderItem.OrderItemId))
             {
                 _context.OrderItems.Update(orderItem);
                 _context.SaveChanges();
@@ -39,7 +45,6 @@ namespace SE183491ConsoleEFApp.DAO
 
         public void FindOrderItemById(int id)
         {
-            using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
             {
                 var orderItem = _context.OrderItems.Find(id);
                 Console.WriteLine(orderItem.OrderId + " " + orderItem.ProductId + " " + orderItem.Quantity + " " + orderItem.Price);
@@ -48,12 +53,16 @@ namespace SE183491ConsoleEFApp.DAO
 
         public void DisplayOrderItems()
         {
-            using (var _context = new NET1814_212_4_JewelryStoreContext(new Microsoft.EntityFrameworkCore.DbContextOptions<NET1814_212_4_JewelryStoreContext>()))
+            if(GetAll() != null)
             {
-                foreach (var orderItem in _context.OrderItems)
+                foreach (var orderItem in GetAll())
                 {
-                    Console.WriteLine(orderItem.OrderId + " " + orderItem.ProductId + " " + orderItem.Quantity + " " + orderItem.Price);
+                    Console.WriteLine(orderItem.OrderItemId+" "+orderItem.OrderId + " " + orderItem.ProductId + " " + orderItem.Quantity + " " + orderItem.Price);
                 }
+            }
+            else
+            {
+                Console.WriteLine("No Order Items");
             }
         }
     }
