@@ -1,8 +1,10 @@
 ﻿using JewelryStore.Business;
 using JewelryStore.Business.Base;
+using JewelryStore.Common;
 using JewelryStore.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +37,7 @@ namespace JewelryStore.WpfApp.UI
         {
             try
             {
-                var orderItem = new OrderItem()
+                OrderItem orderItem = new OrderItem()
                 {
                     OrderItemId = Convert.ToInt32(OrderItemID.Text),
                     OrderId = Convert.ToInt32(OrderID.Text),
@@ -44,9 +46,9 @@ namespace JewelryStore.WpfApp.UI
                     Price = Convert.ToInt32(Price.Text),
                     Subtotal = Convert.ToInt32(Quantity.Text) * Convert.ToInt32(Price.Text)
                 };
+                var existingOrderItem = await _business.GetById(orderItem.OrderItemId);
 
-
-                if (await _business.GetById(orderItem.OrderItemId) == null)
+                if (existingOrderItem.Data as OrderItem == null)
                 {
                     var result = await _business.Save(orderItem);
                     MessageBox.Show(result.Message, "Save");
@@ -56,6 +58,7 @@ namespace JewelryStore.WpfApp.UI
                     ProductID.Text = string.Empty;
                     Quantity.Text = string.Empty;
                     Price.Text = string.Empty;
+                    GetOrderItemsAsync();
 
                 }
                 else
@@ -65,7 +68,7 @@ namespace JewelryStore.WpfApp.UI
 
                     return;
                 }
-                GetOrderItemsAsync();
+                
 
             }
             catch (Exception ex)
@@ -77,11 +80,16 @@ namespace JewelryStore.WpfApp.UI
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
-
+            OrderItemID.Text = string.Empty;
+            OrderID.Text = string.Empty;
+            ProductID.Text = string.Empty;
+            Quantity.Text = string.Empty;
+            Price.Text = string.Empty;
         }
         private async void GetOrderItemsAsync()
         {
             var result = await _business.GetAll();
+           
 
             if (result.Status > 0 && result.Data != null)
             {
@@ -91,6 +99,50 @@ namespace JewelryStore.WpfApp.UI
             {
                 grdOrderItem.ItemsSource = new List<OrderItem>();
             }
+        }
+        private async void ButtonSelect_Click(object sender, RoutedEventArgs e)
+        {
+            OrderItem orderItem = grdOrderItem.SelectedItem as OrderItem;
+            if (orderItem != null)
+            {
+                OrderItemID.Text = orderItem.OrderItemId.ToString();
+                OrderID.Text = orderItem.OrderId.ToString();
+                ProductID.Text = orderItem.ProductId.ToString();
+                Quantity.Text = orderItem.Quantity.ToString();
+                Price.Text = orderItem.Price.ToString();
+            }
+        }
+
+        private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            OrderItem orderItem = grdOrderItem.SelectedItem as OrderItem;
+            if(orderItem == null)
+            {
+                MessageBox.Show("OrderItemID not found", "Warning");
+                return;
+            }
+
+            var result = await _business.DeleteById(orderItem.OrderItemId);
+            MessageBox.Show(result.Message, "Delete");
+            GetOrderItemsAsync();
+        }
+
+        private void ButtonUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            var existingOrderItem = _business.GetById(Convert.ToInt32(OrderID.Text));
+            if (existingOrderItem.Data as OrderItem == null)
+            {
+                MessageBox.Show("OrderItemID not found", "Warning");
+                return;
+            }
+
+            existingOrderItem.OrderId = Convert.ToInt32(OrderID.Text);
+            existingOrderItem.ProductId = Convert.ToInt32(ProductID.Text);
+            existingOrderItem.Quantity = Convert.ToInt32(Quantity.Text);
+            existingOrderItem.Price = Convert.ToInt32(Price.Text);
+            existingOrderItem.Subtotal = Convert.ToInt32(Quantity.Text) * Convert.ToInt32(Price.Text);
+             _business.Update(existingOrderItem);
+            GetOrderItemsAsync();
         }
     }
 }

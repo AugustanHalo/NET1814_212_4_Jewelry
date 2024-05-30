@@ -36,6 +36,10 @@ namespace JewelryStore.Business
                 #endregion
 
                 var orderItems = await _unitOfWork.OrderItemRepository.GetAllAsync();
+                foreach (var item in orderItems)
+                {
+                       item.Subtotal = item.Quantity * item.Price;
+                }
 
                 if(orderItems == null)
                 {
@@ -64,15 +68,15 @@ namespace JewelryStore.Business
                 #region Business rule
                 #endregion
 
-                var orderItems = await _unitOfWork.OrderItemRepository.GetByIdAsync(id);
+                OrderItem orderItem = await _unitOfWork.OrderItemRepository.GetByIdAsync(id);
 
-                if (orderItems == null)
+                if (orderItem == null)
                 {
                     return new BusinessResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
                 else 
                 {
-                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderItems);
+                    return new BusinessResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderItem);
                 }
 
             }

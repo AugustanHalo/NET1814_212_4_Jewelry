@@ -38,6 +38,8 @@
                 </Grid>
             </GroupBox>
             <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="ButtonUpdate" Content="Update" Height="30" Width="80" 
+                Command="{Binding ResetCommand}" Margin="5,0,10,0" Click="ButtonUpdate_Click"/>
                 <Button x:Name="ButtonSave" Content="Save" Height="30" Width="80"
                 Command="{Binding SaveCommand}" Click="ButtonSave_Click"/>
                 <Button x:Name="ButtonCancel" Content="Cancel" Height="30" Width="80" 
@@ -46,17 +48,35 @@
 
             <StackPanel Height="210">
                 <DataGrid x:Name="grdOrderItem" AutoGenerateColumns="False" ItemsSource="{Binding OrderItems}" CanUserAddRows="False" Height="200" Margin="10">
-                   
+
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="OrderItemID" Binding="{Binding Path=OrderItemId}" Width="150" Visibility="Visible"/>
                         <DataGridTextColumn Header="OrderID" Binding="{Binding Path=OrderId}" Width="150" Visibility="Visible"/>
                         <DataGridTextColumn Header="ProductID" Binding="{Binding Path=ProductId}" Width="150"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Quantity" Binding="{Binding Path=Quantity}" Width="150"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Price" Binding="{Binding Path=Price}" Width="150"  IsReadOnly="True"/>
-                        <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=SubTotal}" Width="150"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="SubTotal" Binding="{Binding Path=Subtotal}" Width="150"  IsReadOnly="True"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="ButtonSelect" Content="Select" Height="30" Width="80"
+                                     Click="ButtonSelect_Click"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="ButtonDelete" Content="Delete" Height="30" Width="80"
+                                   Click="ButtonDelete_Click"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
+              
                 </DataGrid>
-            </StackPanel>
+                
+               </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
